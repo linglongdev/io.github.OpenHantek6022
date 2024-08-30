@@ -1,0 +1,42 @@
+version: "1"
+
+package:
+  id: io.github.OpenHantek6022
+  name: OpenHantek6022
+  version: 3.3.3.1
+  kind: app
+  description: |
+    OpenHantek6022 is a DSO software for Hantek USB digital signal oscilloscopes 6022BE / BL
+
+command:
+  - /opt/apps/io.github.OpenHantek6022/files/bin/OpenHantek
+
+base: org.deepin.foundation/23.0.0
+runtime: org.deepin.Runtime/23.0.1
+
+sources:
+  - kind: git
+    url: https://github.com/OpenHantek/OpenHantek6022.git
+    version: master
+    commit: ffd1691a0fe0a6ee74f68922fa41e3247f2bfb07
+  - kind: file
+    url: http://ftp.cn.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0-dev_1.0.22-2_amd64.deb
+    digest: 0c5bc545ab92ae00274f3b33fdadfa895024877884abaaa86380846669252429
+  - kind: file
+    url: http://ftp.cn.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.22-2_amd64.deb
+    digest: 37be9e682f0fd7533b7bb9d91af802a5070ad68eb9434036af5bc2815efb2615
+  - kind: file
+    url: http://ftp.cn.debian.org/debian/pool/main/f/fftw3/libfftw3-dev_3.3.8-2_amd64.deb
+    digest: 4f38dfd0e6ef4e4098ccd4c0f569c08b68a2c8a8263e53eb9c87713d6f47d731
+  - kind: file
+    url: http://ftp.cn.debian.org/debian/pool/main/f/fftw3/libfftw3-bin_3.3.8-2_amd64.deb
+    digest: b549b1ad61157c3df102b57338a1f7b35e3aa0ce3e765d4076cacbaee6924551
+build: |
+  bash ./install_dep linglong/sources $PREFIX
+
+  cd /project/linglong/sources/OpenHantek6022.git
+  mkdir build
+  cd build
+  cmake .. \
+        -DCMAKE_INSTALL_PREFIX=${PREFIX}
+  cmake --build . --target install -j$(nproc --all)
